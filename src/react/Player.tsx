@@ -1,8 +1,9 @@
 import { useRef } from 'react'
 import { useRapier, RigidBody, CapsuleCollider, type RapierRigidBody } from '@react-three/rapier'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { input } from './inputSingleton'
+import { game } from './gameState'
 import type { Terrain } from '@/engine/world/Terrain'
 
 const SPEED = 6
@@ -28,6 +29,7 @@ export function Player({
   const body = useRef<RapierRigidBody>(null)
   const grounded = useRef(false)
   const { world, rapier } = useRapier()
+  const { camera } = useThree()
 
   useFrame(() => {
     const rb = body.current
@@ -35,6 +37,7 @@ export function Player({
 
     const pos = rb.translation()
     playerTarget.current = { x: pos.x, y: pos.y, z: pos.z }
+    game.playerPos = { x: pos.x, y: pos.y, z: pos.z }
     // grounded: short ray from slightly above feet downward
     const rayOrigin = { x: pos.x, y: pos.y - 0.6, z: pos.z }
     const ray = new rapier.Ray(rayOrigin, { x: 0, y: -1, z: 0 })
@@ -57,6 +60,8 @@ export function Player({
     if (input.isDown('KeyD')) move.add(right)
     if (input.isDown('KeyA')) move.sub(right)
     if (move.lengthSq() > 0) move.normalize()
+    // stash facing for station placement (camera-relative forward on ground plane)
+    game.playerForward = { x: forward.x, y: 0, z: forward.z }
     const sprint = input.isDown('ShiftLeft') || input.isDown('ShiftRight')
     const speed = sprint ? SPRINT : SPEED
 
@@ -74,8 +79,7 @@ export function Player({
       rb.setLinvel({ x: 0, y: 0, z: 0 }, true)
     }
 
-    input.endFrame()
-    // touch terrain.heightAt so it stays referenced for future grounding tuning
+    void camera
     void terrain
   })
 

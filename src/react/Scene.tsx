@@ -12,11 +12,17 @@ import {
 import { Player } from './Player'
 import { CameraRig } from './CameraRig'
 import { Foliage } from './Foliage'
+import { ResourceNodes } from './ResourceNodes'
+import { Interaction } from './Interaction'
+import { Stations } from './Stations'
+import { EndFrame } from './EndFrame'
+import type { ResourceNode } from '@/engine/gather/ResourceNodes'
 
 export function Scene() {
   const { camera } = useThree()
   const cameraRef = useRef(camera as THREE.PerspectiveCamera)
   const playerTarget = useRef<{ x: number; y: number; z: number } | null>(null)
+  const nodesRef = useRef<ResourceNode[]>([])
 
   const terrain: Terrain = useMemo(() => generateTerrain(DEFAULT_TERRAIN), [])
   const { geometry } = useMemo(() => terrainGeometry(terrain), [terrain])
@@ -39,9 +45,13 @@ export function Scene() {
       </mesh>
 
       <Foliage terrain={terrain} />
+      <ResourceNodes terrain={terrain} nodesRef={nodesRef} />
+      <Stations />
 
-      <Player terrain={terrain} cameraRef={cameraRef} spawn={[0, 14, 0]} playerTarget={playerTarget} />
+      <Player terrain={terrain} cameraRef={cameraRef} playerTarget={playerTarget} spawn={[0, 14, 0]} />
       <CameraRig target={playerTarget} />
+      <Interaction nodesRef={nodesRef} />
+      <EndFrame />
     </Physics>
   )
 }
