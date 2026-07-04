@@ -1,20 +1,19 @@
 import { Inventory } from '@/engine/inventory/Inventory'
+import { SocketGraph } from '@/engine/build/SocketGraph'
 import { useGameStore } from '@/state/useGameStore'
 
 /**
  * Shared runtime game state — the bridge between the framework-free engine
- * (Inventory, day cycle) and the React/zustand UI. Components call
- * `game.syncToStore()` after mutating inventory to refresh the UI.
+ * (Inventory, day cycle, build graph) and the React/zustand UI. Components call
+ * `game.syncToStore()` after mutating inventory/builds to refresh the UI.
  */
 class GameState {
   readonly inventory = new Inventory(20)
-  /** placed station positions keyed by itemId, for "near a station" checks */
+  readonly build = new SocketGraph()
   stations: { itemId: string; x: number; y: number; z: number }[] = []
-  /** updated by Player each frame; used for station placement */
   playerPos = { x: 0, y: 0, z: 0 }
   playerForward = { x: 0, y: 0, z: 1 }
 
-  /** Mirror inventory + station counts into zustand for the UI. */
   syncToStore() {
     useGameStore.getState().setInventory(this.inventory.snapshot())
   }

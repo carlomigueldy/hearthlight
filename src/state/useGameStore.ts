@@ -10,10 +10,13 @@ interface GameState {
   engineFrame: number
   dayTime: number
   inventory: (ItemStack | null)[]
-  /** currently nearby station itemId (or null) — drives the crafting panel */
   nearbyStation: string | null
-  /** reticle prompt text, e.g. "E: Gather Wood" or "" */
   prompt: string
+  /** build mode */
+  buildMode: boolean
+  buildPiece: string | null
+  buildRotation: number // 0..3 (x90deg)
+  buildDemolish: boolean
   setScreen: (s: Screen) => void
   startGame: () => void
   setPanel: (p: Panel) => void
@@ -22,6 +25,10 @@ interface GameState {
   setInventory: (inv: (ItemStack | null)[]) => void
   setNearbyStation: (s: string | null) => void
   setPrompt: (p: string) => void
+  setBuildMode: (b: boolean) => void
+  setBuildPiece: (p: string | null) => void
+  setBuildRotation: (r: number) => void
+  setBuildDemolish: (b: boolean) => void
 }
 
 export const useGameStore = create<GameState>((set) => ({
@@ -32,6 +39,10 @@ export const useGameStore = create<GameState>((set) => ({
   inventory: new Array(20).fill(null),
   nearbyStation: null,
   prompt: '',
+  buildMode: false,
+  buildPiece: null,
+  buildRotation: 0,
+  buildDemolish: false,
   setScreen: (screen) => set({ screen }),
   startGame: () => set({ screen: 'game', engineFrame: 0, panel: 'none' }),
   setPanel: (panel) => set({ panel }),
@@ -40,4 +51,8 @@ export const useGameStore = create<GameState>((set) => ({
   setInventory: (inventory) => set({ inventory }),
   setNearbyStation: (nearbyStation) => set({ nearbyStation }),
   setPrompt: (prompt) => set({ prompt }),
+  setBuildMode: (buildMode) => set({ buildMode }),
+  setBuildPiece: (buildPiece) => set({ buildPiece }),
+  setBuildRotation: (buildRotation) => set({ buildRotation }),
+  setBuildDemolish: (buildDemolish) => set({ buildDemolish }),
 }))
