@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'
 import { scatterResourceNodes, type ResourceNode } from '@/engine/gather/ResourceNodes'
 import type { Terrain } from '@/engine/world/Terrain'
+import { game } from './gameState'
 
 function nodeGeometry(itemId: string): { geometry: THREE.BufferGeometry; color: string } {
   switch (itemId) {
@@ -29,6 +30,7 @@ export function ResourceNodes({
   const nodes = useMemo(() => scatterResourceNodes(terrain, terrain.params.seed + 999), [terrain])
   useEffect(() => {
     nodesRef.current = nodes
+    game.resourceNodes = nodes
   }, [nodes])
   const groupRef = useRef<THREE.Group>(null)
 
