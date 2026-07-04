@@ -16,6 +16,7 @@ import { ResourceNodes } from './ResourceNodes'
 import { Interaction } from './Interaction'
 import { Stations } from './Stations'
 import { EndFrame } from './EndFrame'
+import { BuildSystem } from './BuildSystem'
 import type { ResourceNode } from '@/engine/gather/ResourceNodes'
 
 export function Scene() {
@@ -51,6 +52,7 @@ export function Scene() {
       <Player terrain={terrain} cameraRef={cameraRef} playerTarget={playerTarget} spawn={[0, 14, 0]} />
       <CameraRig target={playerTarget} />
       <Interaction nodesRef={nodesRef} />
+      <BuildSystem />
       <EndFrame />
     </Physics>
   )

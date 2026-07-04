@@ -20,8 +20,8 @@ export function Hud() {
       <div className="rounded-lg bg-hearth-ink/40 px-2 py-0.5 text-xs text-white/70">
         frame {frame}
       </div>
-      <div className="mt-1 max-w-[260px] rounded-lg bg-hearth-ink/40 px-2 py-1 text-xs text-white/80">
-        WASD move · Shift sprint · Space jump · click to look · Tab inventory · E gather
+      <div className="mt-1 max-w-[280px] rounded-lg bg-hearth-ink/40 px-2 py-1 text-xs text-white/80">
+        WASD · Shift sprint · Space jump · click look · Tab inv · E gather · B build
       </div>
     </div>
   )
