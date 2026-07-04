@@ -1,0 +1,23 @@
+name: release-please
+
+# Automated version releases from Conventional Commits. On every push to main,
+# release-please opens/updates a release PR that bumps the version and updates
+# CHANGELOG.md; merging that PR tags the release and creates the GitHub Release.
+# The M0 baseline (v0.1.0) is tagged manually; release-please manages 0.1.1+.
+# Each release merge pushes to main, which Vercel auto-deploys to production.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json

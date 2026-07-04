@@ -6,6 +6,9 @@
   "type": "module",
   "author": "Carlo Miguel Dy <carlomigueldy@yahoo.com> (https://carlomigueldy.dev)",
   "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
