@@ -1,0 +1,29 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-hearth-water: #2f8f8a;
+  --color-hearth-sand: #e8d6a0;
+  --color-hearth-grass: #7aa05a;
+  --color-hearth-forest: #4f7a3f;
+  --color-hearth-rock: #8a8278;
+  --color-hearth-amber: #e6a23c;
+  --color-hearth-dusk: #e58a9a;
+  --color-hearth-sun: #ffd9a0;
+  --color-hearth-sky: #bfe3e0;
+  --color-hearth-ink: #2b3a36;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background: var(--color-hearth-sky);
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  color: var(--color-hearth-ink);
+}
+
+canvas {
+  display: block;
+  touch-action: none;
+}
