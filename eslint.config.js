@@ -14,6 +14,9 @@ export default tseslint.config(
     plugins: { 'react-hooks': reactHooks, 'react-refresh': reactRefresh },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      // R3F game code legitimately mutates refs inside useFrame; the v7
+      // immutability rule is too aggressive for the imperative engine pattern.
+      'react-hooks/immutability': 'off',
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     },
   },

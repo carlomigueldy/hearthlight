@@ -1,25 +1,47 @@
-import { Physics, RigidBody, CuboidCollider } from '@react-three/rapier'
-import { paletteMaterial } from '@/engine/assets/Materials'
+import { useMemo, useRef } from 'react'
+import { Physics, RigidBody, HeightfieldCollider } from '@react-three/rapier'
+import * as THREE from 'three'
+import { useThree } from '@react-three/fiber'
+import {
+  generateTerrain,
+  terrainGeometry,
+  rapierHeightfield,
+  DEFAULT_TERRAIN,
+  type Terrain,
+} from '@/engine/world/Terrain'
+import { Player } from './Player'
+import { CameraRig } from './CameraRig'
+import { Foliage } from './Foliage'
 
 export function Scene() {
+  const { camera } = useThree()
+  const cameraRef = useRef(camera as THREE.PerspectiveCamera)
+  const playerTarget = useRef<{ x: number; y: number; z: number } | null>(null)
+
+  const terrain: Terrain = useMemo(() => generateTerrain(DEFAULT_TERRAIN), [])
+  const { geometry } = useMemo(() => terrainGeometry(terrain), [terrain])
+  const hf = useMemo(() => rapierHeightfield(terrain), [terrain])
+
   return (
     <Physics>
-      {/* Ground */}
+      {/* Terrain collider + mesh */}
       <RigidBody type="fixed">
-        <CuboidCollider args={[20, 0.5, 20]} position={[0, -0.5, 0]} />
-        <mesh receiveShadow position={[0, 0, 0]}>
-          <boxGeometry args={[40, 1, 40]} />
-          <primitive object={paletteMaterial('sand')} attach="material" />
+        <HeightfieldCollider args={[hf.nrows, hf.ncols, hf.heights, hf.scale]} position={[0, 0, 0]} />
+        <mesh geometry={geometry} receiveShadow castShadow>
+          <meshStandardMaterial vertexColors flatShading roughness={1} metalness={0} />
         </mesh>
       </RigidBody>
 
-      {/* Falling box */}
-      <RigidBody position={[0, 6, 0]}>
-        <mesh castShadow>
-          <boxGeometry args={[1, 1, 1]} />
-          <primitive object={paletteMaterial('amber')} attach="material" />
-        </mesh>
-      </RigidBody>
+      {/* Water plane */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, DEFAULT_TERRAIN.waterLevel, 0]}>
+        <planeGeometry args={[DEFAULT_TERRAIN.size * 2, DEFAULT_TERRAIN.size * 2, 1, 1]} />
+        <meshStandardMaterial color="#2f8f8a" flatShading transparent opacity={0.85} roughness={0.4} />
+      </mesh>
+
+      <Foliage terrain={terrain} />
+
+      <Player terrain={terrain} cameraRef={cameraRef} spawn={[0, 14, 0]} playerTarget={playerTarget} />
+      <CameraRig target={playerTarget} />
     </Physics>
   )
 }
