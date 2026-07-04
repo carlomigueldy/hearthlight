@@ -1,7 +1,7 @@
 {
   "name": "hearthlight",
   "description": "A cozy faceted low-poly open-world survival-craft fantasy with a building system — Phase 0.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "author": "Carlo Miguel Dy <carlomigueldy@yahoo.com> (https://carlomigueldy.dev)",
