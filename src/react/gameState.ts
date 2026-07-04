@@ -1,6 +1,7 @@
 import { Inventory } from '@/engine/inventory/Inventory'
 import { SocketGraph } from '@/engine/build/SocketGraph'
 import { useGameStore } from '@/state/useGameStore'
+import type { ResourceNode } from '@/engine/gather/ResourceNodes'
 
 /**
  * Shared runtime game state — the bridge between the framework-free engine
@@ -11,6 +12,8 @@ class GameState {
   readonly inventory = new Inventory(20)
   readonly build = new SocketGraph()
   stations: { itemId: string; x: number; y: number; z: number }[] = []
+  /** live resource nodes (written by ResourceNodes component; read by save) */
+  resourceNodes: ResourceNode[] = []
   playerPos = { x: 0, y: 0, z: 0 }
   playerForward = { x: 0, y: 0, z: 1 }
 

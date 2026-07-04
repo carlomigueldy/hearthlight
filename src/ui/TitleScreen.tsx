@@ -1,6 +1,17 @@
 import { motion } from 'motion/react'
+import { useState } from 'react'
+import { saveExists, loadIntoGame } from '@/react/saveBridge'
+import { useGameStore } from '@/state/useGameStore'
 
 export function TitleScreen({ onStart }: { onStart: () => void }) {
+  const [hasSave, setHasSave] = useState(saveExists())
+  const startGame = useGameStore((s) => s.startGame)
+
+  function continueGame() {
+    const ok = loadIntoGame()
+    if (ok) startGame()
+  }
+
   return (
     <motion.div
       className="flex h-full w-full flex-col items-center justify-center gap-8"
@@ -24,14 +35,39 @@ export function TitleScreen({ onStart }: { onStart: () => void }) {
       >
         Restore the island. Build your hearth.
       </motion.p>
-      <motion.button
-        className="rounded-2xl bg-hearth-amber px-10 py-3 text-lg font-semibold text-hearth-ink shadow-xl"
-        onClick={onStart}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.97 }}
-      >
-        New Game
-      </motion.button>
+      <div className="flex flex-col items-center gap-3">
+        <motion.button
+          className="rounded-2xl bg-hearth-amber px-10 py-3 text-lg font-semibold text-hearth-ink shadow-xl"
+          onClick={onStart}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.97 }}
+        >
+          New Game
+        </motion.button>
+        {hasSave && (
+          <motion.button
+            className="rounded-2xl bg-white/60 px-8 py-2 text-base font-medium text-hearth-ink shadow"
+            onClick={continueGame}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            Continue
+          </motion.button>
+        )}
+      </div>
+      {hasSave && (
+        <button
+          className="text-xs text-hearth-ink/50 underline"
+          onClick={() => {
+            if (confirm('Delete your save and start fresh?')) {
+              import('@/react/saveBridge').then((m) => m.wipeSave())
+              setHasSave(false)
+            }
+          }}
+        >
+          delete save
+        </button>
+      )}
     </motion.div>
   )
 }

@@ -7,19 +7,20 @@ export type Panel = 'none' | 'inventory' | 'crafting' | 'build'
 interface GameState {
   screen: Screen
   panel: Panel
+  paused: boolean
   engineFrame: number
   dayTime: number
   inventory: (ItemStack | null)[]
   nearbyStation: string | null
   prompt: string
-  /** build mode */
   buildMode: boolean
   buildPiece: string | null
-  buildRotation: number // 0..3 (x90deg)
+  buildRotation: number
   buildDemolish: boolean
   setScreen: (s: Screen) => void
   startGame: () => void
   setPanel: (p: Panel) => void
+  setPaused: (p: boolean) => void
   setEngineFrame: (n: number) => void
   setDayTime: (t: number) => void
   setInventory: (inv: (ItemStack | null)[]) => void
@@ -34,6 +35,7 @@ interface GameState {
 export const useGameStore = create<GameState>((set) => ({
   screen: 'title',
   panel: 'none',
+  paused: false,
   engineFrame: 0,
   dayTime: 0,
   inventory: new Array(20).fill(null),
@@ -44,8 +46,9 @@ export const useGameStore = create<GameState>((set) => ({
   buildRotation: 0,
   buildDemolish: false,
   setScreen: (screen) => set({ screen }),
-  startGame: () => set({ screen: 'game', engineFrame: 0, panel: 'none' }),
+  startGame: () => set({ screen: 'game', engineFrame: 0, panel: 'none', paused: false }),
   setPanel: (panel) => set({ panel }),
+  setPaused: (paused) => set({ paused }),
   setEngineFrame: (engineFrame) => set({ engineFrame }),
   setDayTime: (dayTime) => set({ dayTime }),
   setInventory: (inventory) => set({ inventory }),
